@@ -50,7 +50,7 @@
     // CARREGAR HISTÓRICO
     // ========================================
     
-        window.loadHistory = async function() {
+            window.loadHistory = async function() {
         try {
             const timeline = document.getElementById('timeline');
             timeline.innerHTML = `
@@ -60,8 +60,10 @@
                 </div>
             `;
             
+            // Obter filtros
             const filterType = document.getElementById('filterType').value;
-            const searchText = document.getElementById('searchText').value.toLowerCase();
+            const filterDateStart = document.getElementById('filterDateStart').value;
+            const filterDateEnd = document.getElementById('filterDateEnd').value;
             const sortBy = document.getElementById('sortBy').value;
             
             allProtocols = [];
@@ -214,9 +216,13 @@
                 filteredProtocols = filteredProtocols.filter(p => p.date <= filterDateEnd);
             }
             
+            // Ordenar por data (mais recente primeiro)
             filteredProtocols.sort((a, b) => new Date(b.date) - new Date(a.date));
             
+            // Atualizar estatísticas
             updateStats(allProtocols);
+            
+            // Renderizar timeline
             renderTimeline(filteredProtocols);
             
         } catch (error) {
