@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Núcleo Emocional Interno - Aliança Divergente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="dashboard-page">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="novo-protocolo.html">
+                <i data-feather="arrow-left" class="feather-sm"></i>
+                <span class="brand-title">Núcleo Emocional Interno</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="navbar-text me-3" id="userGreeting">
+                            <i data-feather="user" class="feather-sm"></i>
+                            <span id="userName">Carregando...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-gold btn-sm" onclick="logout()">
+                            <i data-feather="log-out" class="feather-sm"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                
+                <!-- Header -->
+                <div class="form-header mb-4">
+                    <div class="form-header-icon">
+                        <i data-feather="user-check"></i>
+                    </div>
+                    <div class="form-header-content">
+                        <h1 class="form-title">Mapa de Núcleo Emocional Interno</h1>
+                        <p class="form-subtitle">Identifique quem interfere nas suas emoções e no seu PDA (Percepção, Decisão, Ação)</p>
+                    </div>
+                </div>
+
+                <!-- Alert Container -->
+                <div id="alertContainer"></div>
+
+                <!-- Explicação -->
+                <div class="info-box mb-4">
+                    <div class="info-icon">
+                        <i data-feather="info"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>Como funciona o mapeamento</h4>
+                        <p class="mb-2">
+                            Posicione as pessoas pelo <strong>nível de interferência</strong> que elas têm nas suas 
+                            emoções e, consequentemente, nas suas percepções, decisões e ações.
+                        </p>
+                        <ul class="mb-0">
+                            <li><strong>Nível 1</strong> = Interfere muito (centro do seu núcleo)</li>
+                            <li><strong>Nível 5</strong> = Interfere pouco (periferia do seu núcleo)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quadrantes -->
+                <div class="quadrantes-info mb-4">
+                    <h4 class="mb-3 text-center">Os 4 Quadrantes</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="quadrante-card quadrante-vitima-natural">
+                                <div class="quadrante-header">
+                                    <i data-feather="frown"></i>
+                                    <h5>Vítima Natural</h5>
+                                </div>
+                                <p>Pessoas que sofrem genuinamente e precisam de ajuda</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="quadrante-card quadrante-vitima-intencional">
+                                <div class="quadrante-header">
+                                    <i data-feather="alert-triangle"></i>
+                                    <h5>Vítima Intencional</h5>
+                                </div>
+                                <p>Pessoas que se fazem de vítima para manipular</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="quadrante-card quadrante-vingador">
+                                <div class="quadrante-header">
+                                    <i data-feather="zap"></i>
+                                    <h5>Vingador</h5>
+                                </div>
+                                <p>Pessoas que culpam e atacam os outros</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="quadrante-card quadrante-narcisista">
+                                <div class="quadrante-header">
+                                    <i data-feather="award"></i>
+                                    <h5>Narcisista</h5>
+                                </div>
+                                <p>Pessoas centradas em si mesmas, que desconsideram os outros</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário -->
+                <form id="nucleoInternoForm" class="protocol-form">
+                    
+                    <!-- Informações Básicas -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <i data-feather="info" class="feather-sm"></i>
+                            <h3>Informações Básicas</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="nome" class="form-label">Nome (opcional)</label>
+                                    <input type="text" class="form-control" id="nome" placeholder="Seu nome">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="dataPreenchimento" class="form-label">Data *</label>
+                                    <input type="date" class="form-control" id="dataPreenchimento" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pessoas Mapeadas -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">1</span>
+                            <h3>Mapeie as Pessoas</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <p class="mb-4">
+                                Adicione as pessoas que interferem nas suas emoções. 
+                                Classifique cada uma em um quadrante e defina o nível de interferência.
+                            </p>
+                            
+                            <div id="pessoasContainer">
+                                <!-- Pessoas serão adicionadas dinamicamente -->
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary mt-3" onclick="addPessoa()">
+                                <i data-feather="user-plus" class="feather-sm"></i>
+                                Adicionar Pessoa
+                            </button>
+                            
+                            <div class="form-help mt-3">
+                                <i data-feather="help-circle" class="feather-xs"></i>
+                                Adicione quantas pessoas forem necessárias. Seja honesto na classificação.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumo -->
+                    <div class="form-card mb-4" id="resumoCard" style="display: none;">
+                        <div class="form-card-header">
+                            <i data-feather="bar-chart-2" class="feather-sm"></i>
+                            <h3>Resumo do Mapeamento</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="row text-center">
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="totalPessoas">0</div>
+                                        <div class="resumo-label">Total de Pessoas</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="countVitimanatural">0</div>
+                                        <div class="resumo-label">Vítima Natural</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="countVitimaIntencional">0</div>
+                                        <div class="resumo-label">Vítima Intencional</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="countVingador">0</div>
+                                        <div class="resumo-label">Vingador</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="countNarcisista">0</div>
+                                        <div class="resumo-label">Narcisista</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3">
+                                    <div class="resumo-stat">
+                                        <div class="resumo-number" id="nivelMedio">0</div>
+                                        <div class="resumo-label">Nível Médio</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary btn-lg" onclick="window.history.back()">
+                            <i data-feather="x" class="feather-sm"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <span class="btn-text">
+                                <i data-feather="save" class="feather-sm"></i>
+                                Salvar Mapeamento
+                            </span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Mapeamento Salvo! 🎯</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Seu Núcleo Emocional Interno foi mapeado com sucesso!</p>
+                    <p>Deseja criar um PDA para trabalhar esses relacionamentos?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" onclick="finishWithoutPDA()">
+                        Não, obrigado
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="createPDA()">
+                        <i data-feather="check-circle" class="feather-sm"></i>
+                        Sim, criar PDA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/client.js"></script>
+    <script src="assets/js/form-nucleo-interno.js"></script>
+    
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
