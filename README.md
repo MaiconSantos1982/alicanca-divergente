@@ -1,1 +1,0 @@
-# alicanca-divergente
