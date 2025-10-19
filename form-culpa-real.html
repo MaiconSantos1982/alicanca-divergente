@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminando Culpa Real - Aliança Divergente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="dashboard-page">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="novo-protocolo.html">
+                <i data-feather="arrow-left" class="feather-sm"></i>
+                <span class="brand-title">Eliminando Culpa Real</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="navbar-text me-3" id="userGreeting">
+                            <i data-feather="user" class="feather-sm"></i>
+                            <span id="userName">Carregando...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-gold btn-sm" onclick="logout()">
+                            <i data-feather="log-out" class="feather-sm"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                
+                <!-- Header -->
+                <div class="form-header mb-4">
+                    <div class="form-header-icon">
+                        <i data-feather="heart"></i>
+                    </div>
+                    <div class="form-header-content">
+                        <h1 class="form-title">Eliminando a Culpa Real</h1>
+                        <p class="form-subtitle">Prepare o diálogo estruturado para se libertar da culpa</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container mb-4">
+                    <div class="progress-bar-custom">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">0% completo</p>
+                </div>
+
+                <!-- Alert Container -->
+                <div id="alertContainer"></div>
+
+                <!-- Info sobre Culpa Real -->
+                <div class="info-box mb-4">
+                    <div class="info-icon">
+                        <i data-feather="info"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4>O que é Culpa Real?</h4>
+                        <p class="mb-2">
+                            É quando você fez ou deixou de fazer algo e alguém está utilizando isso 
+                            contra você, contra si mesmo ou contra outras pessoas.
+                        </p>
+                        <p class="mb-0">
+                            <em>"Não é possível apagar o passado, mas é possível se libertar dele através do diálogo."</em>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Formulário -->
+                <form id="culpaRealForm" class="protocol-form">
+                    
+                    <!-- Informações Básicas -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <i data-feather="info" class="feather-sm"></i>
+                            <h3>Informações Básicas</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="nome" class="form-label">Seu nome (opcional)</label>
+                                    <input type="text" class="form-control" id="nome" placeholder="Seu nome">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="dataPreenchimento" class="form-label">Data *</label>
+                                    <input type="date" class="form-control" id="dataPreenchimento" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="tipoCulpa" class="form-label">Tipo de Culpa</label>
+                                    <select class="form-select" id="tipoCulpa" onchange="updateProgress()">
+                                        <option value="">Selecione...</option>
+                                        <option value="Autoculpa">Autoculpa</option>
+                                        <option value="Dirigida">Dirigida</option>
+                                        <option value="Ilegítima">Ilegítima</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estrutura da Conversa -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">1</span>
+                            <h3>Estrutura da Conversa Difícil</h3>
+                        </div>
+                        <div class="form-card-body">
+                            
+                            <!-- Nome da pessoa -->
+                            <div class="mb-4">
+                                <label for="nomePessoa" class="form-label">
+                                    <strong>Oi</strong> (nome da pessoa): *
+                                </label>
+                                <input type="text" class="form-control" id="nomePessoa" required
+                                       oninput="updateProgress(); updatePreview()"
+                                       placeholder="Ex: João, Maria...">
+                            </div>
+
+                            <!-- Acontecimento -->
+                            <div class="mb-4">
+                                <label for="acontecimentoChave" class="form-label">
+                                    <strong>Preciso conversar com você sobre</strong> (acontecimento chave): *
+                                </label>
+                                <textarea class="form-control form-textarea" id="acontecimentoChave" rows="2" required
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="Ex: O que aconteceu na última reunião, aquela discussão..."></textarea>
+                            </div>
+
+                            <!-- Reconheço que -->
+                            <div class="mb-4">
+                                <label for="reconhecoQue" class="form-label">
+                                    <strong>Reconheço que</strong> (o que você fez ou deixou de fazer): *
+                                </label>
+                                <textarea class="form-control form-textarea" id="reconhecoQue" rows="3" required
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="Seja específico sobre sua responsabilidade..."></textarea>
+                            </div>
+
+                            <!-- Causou impactos -->
+                            <div class="mb-4">
+                                <label for="causouImpactos" class="form-label">
+                                    <strong>Sei que isso causou</strong> (impactos negativos): *
+                                </label>
+                                <textarea class="form-control form-textarea" id="causouImpactos" rows="3" required
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="Quais foram as consequências das suas ações?"></textarea>
+                            </div>
+
+                            <!-- Por causa disso -->
+                            <div class="mb-4">
+                                <label for="porCausaDisso" class="form-label">
+                                    <strong>Por causa disso</strong> (consequências diretas):
+                                </label>
+                                <textarea class="form-control form-textarea" id="porCausaDisso" rows="2"
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="O que aconteceu como resultado direto?"></textarea>
+                            </div>
+
+                            <!-- Isso fez com que -->
+                            <div class="mb-0">
+                                <label for="issoFezComQue" class="form-label">
+                                    <strong>Isso fez com que</strong> (consequências indiretas):
+                                </label>
+                                <textarea class="form-control form-textarea" id="issoFezComQue" rows="2"
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="Efeitos indiretos e de longo prazo..."></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Compreensão dos Sentimentos -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">2</span>
+                            <h3>Compreendendo os Sentimentos</h3>
+                        </div>
+                        <div class="form-card-body">
+                            
+                            <div class="mb-3">
+                                <label for="sabeComoSentiu" class="form-label">
+                                    Você sabe como a pessoa se sentiu?
+                                </label>
+                                <select class="form-select" id="sabeComoSentiu" onchange="updateProgress()">
+                                    <option value="">Selecione...</option>
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pessoaSeSentiu" class="form-label">
+                                    Como a pessoa se sentiu na época?
+                                </label>
+                                <input type="text" class="form-control" id="pessoaSeSentiu"
+                                       oninput="updateProgress()"
+                                       placeholder="Ex: Magoada, traída, desrespeitada...">
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="pessoaSesenteHoje" class="form-label">
+                                    Como a pessoa se sente hoje?
+                                </label>
+                                <input type="text" class="form-control" id="pessoaSesenteHoje"
+                                       oninput="updateProgress()"
+                                       placeholder="Ex: Ainda ressentida, já superou...">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Reconhecimento e Responsabilidade -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">3</span>
+                            <h3>Reconhecimento e Responsabilidade</h3>
+                        </div>
+                        <div class="form-card-body">
+                            
+                            <div class="mb-3">
+                                <label for="pessoasEnvolvidas" class="form-label">
+                                    Quem estava envolvido?
+                                </label>
+                                <input type="text" class="form-control" id="pessoasEnvolvidas"
+                                       oninput="updateProgress()"
+                                       placeholder="Nomes das pessoas afetadas...">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fizDeErrado" class="form-label">
+                                    O que você fez de errado?
+                                </label>
+                                <textarea class="form-control" id="fizDeErrado" rows="2"
+                                          oninput="updateProgress()"
+                                          placeholder="Seja específico sobre seus erros..."></textarea>
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="eraMinhaResponsabilidade" class="form-label">
+                                    O que era sua responsabilidade e você não fez?
+                                </label>
+                                <textarea class="form-control" id="eraMinhaResponsabilidade" rows="2"
+                                          oninput="updateProgress()"
+                                          placeholder="Omissões e responsabilidades não cumpridas..."></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Reparação -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">4</span>
+                            <h3>Proposta de Reparação</h3>
+                        </div>
+                        <div class="form-card-body">
+                            
+                            <div class="mb-3">
+                                <label for="necessitaReparacao" class="form-label">
+                                    Necessita reparação material?
+                                </label>
+                                <select class="form-select" id="necessitaReparacao" onchange="updateProgress()">
+                                    <option value="">Selecione...</option>
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="reparacaoProposta" class="form-label">
+                                    Qual reparação você propõe?
+                                </label>
+                                <textarea class="form-control form-textarea" id="reparacaoProposta" rows="3"
+                                          oninput="updateProgress()"
+                                          placeholder="O que você pode fazer para reparar o dano?"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Impactos e Compromisso -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">5</span>
+                            <h3>Reflexão e Compromisso</h3>
+                        </div>
+                        <div class="form-card-body">
+                            
+                            <div class="mb-3">
+                                <label for="momentosQuandoTento" class="form-label">
+                                    Em que momentos você tenta se libertar dessa culpa?
+                                </label>
+                                <textarea class="form-control" id="momentosQuandoTento" rows="2"
+                                          oninput="updateProgress()"
+                                          placeholder="Situações onde essa culpa aparece..."></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="utilidadeVida" class="form-label">
+                                    Qual a utilidade dessa culpa na sua vida?
+                                </label>
+                                <textarea class="form-control" id="utilidadeVida" rows="2"
+                                          oninput="updateProgress()"
+                                          placeholder="O que essa culpa te impede ou te motiva a fazer?"></textarea>
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="aPartirDeHoje" class="form-label">
+                                    <strong>A partir de hoje, me comprometo a:</strong> *
+                                </label>
+                                <textarea class="form-control form-textarea" id="aPartirDeHoje" rows="3" required
+                                          oninput="updateProgress(); updatePreview()"
+                                          placeholder="Que mudanças você vai fazer? Como vai agir diferente?"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Preview do Script -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <i data-feather="message-square" class="feather-sm"></i>
+                            <h3>Preview do Script da Conversa</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="script-preview" id="scriptPreview">
+                                <p class="text-muted">Preencha os campos acima para visualizar o script completo...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary btn-lg" onclick="window.history.back()">
+                            <i data-feather="x" class="feather-sm"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <span class="btn-text">
+                                <i data-feather="save" class="feather-sm"></i>
+                                Salvar Protocolo
+                            </span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Protocolo Salvo! ❤️</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Seu script foi salvo com sucesso!</p>
+                    <p>Agora você está preparado para ter essa conversa difícil.</p>
+                    <p>Deseja criar um PDA para se preparar melhor?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" onclick="finishWithoutPDA()">
+                        Não, obrigado
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="createPDA()">
+                        <i data-feather="check-circle" class="feather-sm"></i>
+                        Sim, criar PDA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/client.js"></script>
+    <script src="assets/js/form-culpa-real.js"></script>
+    
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
