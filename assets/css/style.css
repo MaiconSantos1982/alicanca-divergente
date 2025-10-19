@@ -2115,3 +2115,51 @@ body {
         padding: 0.8rem;
     }
 }
+/* ========================================
+   ELIMINANDO CULPA REAL - ESTILOS
+   ======================================== */
+
+/* Script Preview */
+.script-preview {
+    background: rgba(216, 174, 97, 0.05);
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-height: 150px;
+}
+
+.script-content {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+.script-content p { 
+    margin-bottom: 1rem;
+}
+
+.script-content p:last-child {
+    margin-bottom: 0;
+}
+
+.script-content strong {
+    color: var(--accent-gold);
+}
+
+.script-content em {
+    color: rgba(255, 255, 255, 0.9);
+    font-style: normal;
+    background: rgba(216, 174, 97, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .script-preview {
+        padding: 1rem;
+    }
+    
+    .script-content {
+        font-size: 0.9rem;
+    }
+}
