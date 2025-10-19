@@ -30,7 +30,6 @@
             
             currentUser = session.user;
             
-            // Carregar nome do usuário
             const userName = currentUser.user_metadata?.full_name || 
                            currentUser.user_metadata?.display_name || 
                            currentUser.email.split('@')[0];
@@ -39,6 +38,15 @@
             
             // Carregar histórico
             await loadHistory();
+            
+            // Adicionar listeners aos filtros
+            const filterType = document.getElementById('filterType');
+            const filterDateStart = document.getElementById('filterDateStart');
+            const filterDateEnd = document.getElementById('filterDateEnd');
+            
+            if (filterType) filterType.addEventListener('change', loadHistory);
+            if (filterDateStart) filterDateStart.addEventListener('change', loadHistory);
+            if (filterDateEnd) filterDateEnd.addEventListener('change', loadHistory);
             
         } catch (error) {
             console.error('Erro ao verificar autenticação:', error);
@@ -50,7 +58,7 @@
     // CARREGAR HISTÓRICO
     // ========================================
     
-            window.loadHistory = async function() {
+    window.loadHistory = async function() {
         try {
             const timeline = document.getElementById('timeline');
             timeline.innerHTML = `
@@ -60,11 +68,14 @@
                 </div>
             `;
             
-            // Obter filtros
-            const filterType = document.getElementById('filterType').value;
-            const filterDateStart = document.getElementById('filterDateStart').value;
-            const filterDateEnd = document.getElementById('filterDateEnd').value;
-            const sortBy = document.getElementById('sortBy').value;
+            // Obter filtros (com proteção)
+            const filterTypeEl = document.getElementById('filterType');
+            const filterDateStartEl = document.getElementById('filterDateStart');
+            const filterDateEndEl = document.getElementById('filterDateEnd');
+            
+            const filterType = filterTypeEl ? filterTypeEl.value : '';
+            const filterDateStart = filterDateStartEl ? filterDateStartEl.value : '';
+            const filterDateEnd = filterDateEndEl ? filterDateEndEl.value : '';
             
             allProtocols = [];
             
@@ -414,6 +425,24 @@
                     
                     html = renderNucleoDetails(nucleo, pessoas, type);
                     break;
+                    
+                case 'combate_medo':
+                    const { data: medo } = await supabase
+                        .from('ad_protocolo_combate_medo')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    html = renderMedoDetails(medo);
+                    break;
+                    
+                case 'culpa_real':
+                    const { data: culpa } = await supabase
+                        .from('ad_protocolo_culpa_real')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    html = renderCulpaDetails(culpa);
+                    break;
             }
             
             modalBody.innerHTML = html;
@@ -572,14 +601,65 @@
         return html;
     }
     
+    function renderMedoDetails(medo) {
+        return `
+            <div class="details-container">
+                <div class="detail-item">
+                    <strong>Medo:</strong>
+                    <p>${escapeHtml(medo.medo_descricao || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>PDA Memorável - Percepção:</strong>
+                    <p>${escapeHtml(medo.pda_memoravel_percepcao || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>PDA Memorável - Decisão:</strong>
+                    <p>${escapeHtml(medo.pda_memoravel_decisao || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>PDA Memorável - Ação:</strong>
+                    <p>${escapeHtml(medo.pda_memoravel_acao || '-')}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    function renderCulpaDetails(culpa) {
+        return `
+            <div class="details-container">
+                <div class="detail-item">
+                    <strong>Pessoa:</strong>
+                    <p>${escapeHtml(culpa.nome_pessoa || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Acontecimento:</strong>
+                    <p>${escapeHtml(culpa.acontecimento_chave || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Reconheço que:</strong>
+                    <p>${escapeHtml(culpa.reconheco_que || '-')}</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Compromisso:</strong>
+                    <p>${escapeHtml(culpa.a_partir_de_hoje || '-')}</p>
+                </div>
+            </div>
+        `;
+    }
+    
     // ========================================
     // LIMPAR FILTROS
     // ========================================
     
     window.clearFilters = function() {
-        document.getElementById('filterType').value = '';
-        document.getElementById('filterDateStart').value = '';
-        document.getElementById('filterDateEnd').value = '';
+        const filterType = document.getElementById('filterType');
+        const filterDateStart = document.getElementById('filterDateStart');
+        const filterDateEnd = document.getElementById('filterDateEnd');
+        
+        if (filterType) filterType.value = '';
+        if (filterDateStart) filterDateStart.value = '';
+        if (filterDateEnd) filterDateEnd.value = '';
+        
         loadHistory();
     };
     
