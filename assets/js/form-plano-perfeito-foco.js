@@ -262,8 +262,8 @@
         }
     };
     
-    // ========================================
-    // SUBMIT DO FORMULÁRIO
+        // ========================================
+    // SUBMIT DO FORMULÁRIO (CORRIGIDO)
     // ========================================
     
     async function handleSubmit(e) {
@@ -287,12 +287,19 @@
             return;
         }
         
+        if (!e.target.checkValidity()) {
+            e.target.reportValidity();
+            return;
+        }
+        
         // Loading state
         submitBtn.disabled = true;
         btnText.classList.add('d-none');
         spinner.classList.remove('d-none');
         
         try {
+            console.log('📝 Iniciando salvamento do protocolo...');
+            
             // Dados principais
             const formData = {
                 user_id: currentUser.id,
@@ -307,32 +314,67 @@
                 fichas_relacionamento: fichasDistribuidas.relacionamento
             };
             
+            console.log('📊 Dados do formulário:', formData);
+            
             // Inserir registro principal
+            console.log('💾 Salvando registro principal...');
             const { data: planoData, error: planoError } = await supabase
                 .from('ad_plano_perfeito_foco')
                 .insert([formData])
                 .select();
             
-            if (planoError) throw planoError;
+            if (planoError) {
+                console.error('❌ Erro ao salvar registro principal:', planoError);
+                throw new Error(`Erro ao salvar plano: ${planoError.message || JSON.stringify(planoError)}`);
+            }
+            
+            if (!planoData || planoData.length === 0) {
+                throw new Error('Nenhum dado retornado após inserção');
+            }
             
             savedProtocolId = planoData[0].id;
+            console.log('✅ Registro principal salvo com ID:', savedProtocolId);
             
             // Inserir objetivos
-            await saveObjetivos(savedProtocolId, objetivos);
+            try {
+                console.log('🎯 Salvando objetivos...');
+                await saveObjetivos(savedProtocolId, objetivos);
+            } catch (objError) {
+                console.error('⚠️ Erro ao salvar objetivos (não crítico):', objError);
+                // Não bloqueia o fluxo - objetivos são opcionais
+            }
             
             // Inserir progresso mensal (se preenchido)
-            await saveProgressoMensal(savedProtocolId);
+            try {
+                console.log('📅 Salvando progresso mensal...');
+                await saveProgressoMensal(savedProtocolId);
+            } catch (progError) {
+                console.error('⚠️ Erro ao salvar progresso (não crítico):', progError);
+                // Não bloqueia o fluxo - progresso é opcional
+            }
             
-            console.log('✅ Protocolo salvo:', savedProtocolId);
+            console.log('✅ Protocolo salvo com sucesso!');
             
             // Mostrar modal de confirmação
             const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
             modal.show();
             
         } catch (error) {
-            console.error('Erro ao salvar protocolo:', error);
-            showAlert('Erro ao salvar. Tente novamente.', 'danger');
+            console.error('❌ Erro geral ao salvar protocolo:', error);
             
+            let errorMessage = 'Erro ao salvar. ';
+            
+            if (error.message) {
+                errorMessage += error.message;
+            } else if (typeof error === 'object') {
+                errorMessage += JSON.stringify(error);
+            } else {
+                errorMessage += 'Tente novamente.';
+            }
+            
+            showAlert(errorMessage, 'danger');
+            
+            // Reset button
             submitBtn.disabled = false;
             btnText.classList.remove('d-none');
             spinner.classList.add('d-none');
@@ -340,7 +382,7 @@
     }
     
     // ========================================
-    // FUNÇÕES AUXILIARES DE SALVAMENTO
+    // FUNÇÕES AUXILIARES (CORRIGIDAS)
     // ========================================
     
     function getObjetivos() {
@@ -348,8 +390,16 @@
         const objetivoItems = document.querySelectorAll('.objetivo-item');
         
         objetivoItems.forEach((item, index) => {
-            const texto = item.querySelector('.objetivo-texto').value.trim();
-            const pilar = item.querySelector('.objetivo-pilar').value;
+            const textoInput = item.querySelector('.objetivo-texto');
+            const pilarInput = item.querySelector('.objetivo-pilar');
+            
+            if (!textoInput || !pilarInput) {
+                console.warn('Inputs não encontrados no objetivo', index);
+                return;
+            }
+            
+            const texto = textoInput.value.trim();
+            const pilar = pilarInput.value;
             
             if (texto && pilar) {
                 objetivos.push({
@@ -360,11 +410,15 @@
             }
         });
         
+        console.log('🎯 Objetivos coletados:', objetivos.length);
         return objetivos;
     }
     
     async function saveObjetivos(planoFocoId, objetivos) {
-        if (objetivos.length === 0) return;
+        if (!objetivos || objetivos.length === 0) {
+            console.log('⚠️ Nenhum objetivo para salvar');
+            return;
+        }
         
         const objetivosData = objetivos.map(obj => ({
             plano_foco_id: planoFocoId,
@@ -374,13 +428,19 @@
             pilar: obj.pilar
         }));
         
-        const { error } = await supabase
+        console.log('💾 Salvando', objetivosData.length, 'objetivos...');
+        
+        const { data, error } = await supabase
             .from('ad_plano_perfeito_objetivos')
-            .insert(objetivosData);
+            .insert(objetivosData)
+            .select();
         
-        if (error) throw error;
+        if (error) {
+            console.error('❌ Erro ao salvar objetivos:', error);
+            throw new Error(`Erro ao salvar objetivos: ${error.message}`);
+        }
         
-        console.log('✅ Objetivos salvos:', objetivos.length);
+        console.log('✅ Objetivos salvos:', data?.length || objetivosData.length);
     }
     
     async function saveProgressoMensal(planoFocoId) {
@@ -388,7 +448,14 @@
         
         Object.keys(mesesMap).forEach(mesNome => {
             const fieldId = mesesMap[mesNome];
-            const progresso = document.getElementById(fieldId).value.trim();
+            const campo = document.getElementById(fieldId);
+            
+            if (!campo) {
+                console.warn('Campo não encontrado:', fieldId);
+                return;
+            }
+            
+            const progresso = campo.value.trim();
             
             if (progresso) {
                 progressoData.push({
@@ -401,18 +468,25 @@
         });
         
         if (progressoData.length === 0) {
-            console.log('⚠️ Nenhum progresso mensal preenchido');
+            console.log('ℹ️ Nenhum progresso mensal preenchido');
             return;
         }
         
-        const { error } = await supabase
+        console.log('💾 Salvando progresso de', progressoData.length, 'meses...');
+        
+        const { data, error } = await supabase
             .from('ad_plano_perfeito_progresso')
-            .insert(progressoData);
+            .insert(progressoData)
+            .select();
         
-        if (error) throw error;
+        if (error) {
+            console.error('❌ Erro ao salvar progresso:', error);
+            throw new Error(`Erro ao salvar progresso mensal: ${error.message}`);
+        }
         
-        console.log('✅ Progresso mensal salvo:', progressoData.length, 'meses');
+        console.log('✅ Progresso mensal salvo:', data?.length || progressoData.length, 'meses');
     }
+
     
     // ========================================
     // CRIAR PDA
