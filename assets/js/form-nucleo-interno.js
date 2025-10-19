@@ -341,7 +341,7 @@
         return pessoas;
     }
     
-    async function savePessoas(nucleoInternoId, pessoas) {
+        async function savePessoas(nucleoInternoId, pessoas) {
         if (!pessoas || pessoas.length === 0) {
             console.log('⚠️ Nenhuma pessoa para salvar');
             return;
@@ -357,6 +357,7 @@
         }));
         
         console.log('💾 Salvando', pessoasData.length, 'pessoas...');
+        console.log('📊 Dados das pessoas:', pessoasData);
         
         const { data, error } = await supabase
             .from('ad_nucleo_interno_pessoas')
@@ -364,8 +365,14 @@
             .select();
         
         if (error) {
-            console.error('❌ Erro ao salvar pessoas:', error);
-            throw new Error(`Erro ao salvar pessoas: ${error.message}`);
+            console.error('❌ Erro completo ao salvar pessoas:', error);
+            console.error('❌ Detalhes do erro:', {
+                message: error.message,
+                details: error.details,
+                hint: error.hint,
+                code: error.code
+            });
+            throw new Error(`Erro ao salvar pessoas: ${error.message || error.code || 'Erro desconhecido'}`);
         }
         
         console.log('✅ Pessoas salvas:', data?.length || pessoasData.length);
