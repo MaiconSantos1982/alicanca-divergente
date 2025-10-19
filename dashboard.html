@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aliança Divergente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="dashboard-page">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="dashboard.html">
+                <span class="brand-title">Aliança Divergente</span>
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="navbar-text me-3" id="userGreeting">
+                            <i data-feather="user" class="feather-sm"></i>
+                            <span id="userName">Carregando...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-gold btn-sm" onclick="logout()">
+                            <i data-feather="log-out" class="feather-sm"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-11">
+                
+                <!-- Welcome Section -->
+                <div class="welcome-section mb-4">
+                    <h1 class="page-title">Bem-vindo(a)!</h1>
+                    <p class="page-subtitle">Escolha uma ferramenta para começar</p>
+                </div>
+
+                <!-- Plano Perfeito Section -->
+                <div class="section-header mb-3">
+                    <h2 class="section-title">
+                        <i data-feather="target" class="feather-md"></i>
+                        Plano Perfeito
+                    </h2>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <!-- Card 1: Plano Perfeito - Lições -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('plano-perfeito-licoes')">
+                            <div class="card-icon">
+                                <i data-feather="book-open"></i>
+                            </div>
+                            <h3 class="card-title">Lições Aprendidas</h3>
+                            <p class="card-description">
+                                Reflita sobre seu último ano e aprenda com suas experiências
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-licoes">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Plano Perfeito - Definindo Foco -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('plano-perfeito-foco')">
+                            <div class="card-icon">
+                                <i data-feather="compass"></i>
+                            </div>
+                            <h3 class="card-title">Definindo Foco</h3>
+                            <p class="card-description">
+                                Defina seus objetivos e organize suas prioridades
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-foco">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protocolos Section -->
+                <div class="section-header mb-3">
+                    <h2 class="section-title">
+                        <i data-feather="layers" class="feather-md"></i>
+                        Protocolos
+                    </h2>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <!-- Card 3: Núcleo Interno -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('nucleo-interno')">
+                            <div class="card-icon">
+                                <i data-feather="user-check"></i>
+                            </div>
+                            <h3 class="card-title">Núcleo Interno</h3>
+                            <p class="card-description">
+                                Identifique quem interfere nas suas emoções e PDA
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-interno">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Núcleo Externo -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('nucleo-externo')">
+                            <div class="card-icon">
+                                <i data-feather="users"></i>
+                            </div>
+                            <h3 class="card-title">Núcleo Externo</h3>
+                            <p class="card-description">
+                                Mapeie em quem você interfere emocionalmente
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-externo">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Combate ao Medo -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('combate-medo')">
+                            <div class="card-icon">
+                                <i data-feather="shield"></i>
+                            </div>
+                            <h3 class="card-title">Combate ao Medo</h3>
+                            <p class="card-description">
+                                Entenda, avalie e supere seus medos
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-medo">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Eliminando Culpa -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card" onclick="navigateTo('culpa-real')">
+                            <div class="card-icon">
+                                <i data-feather="heart"></i>
+                            </div>
+                            <h3 class="card-title">Eliminando Culpa</h3>
+                            <p class="card-description">
+                                Liberte-se da culpa real através do diálogo
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-culpa">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ferramentas Section -->
+                <div class="section-header mb-3">
+                    <h2 class="section-title">
+                        <i data-feather="tool" class="feather-md"></i>
+                        Ferramentas
+                    </h2>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <!-- Card 7: PDA -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card card-highlight" onclick="navigateTo('pda')">
+                            <div class="card-icon">
+                                <i data-feather="check-circle"></i>
+                            </div>
+                            <h3 class="card-title">PDA</h3>
+                            <p class="card-description">
+                                Percepção, Decisão, Ação - Gerencie suas tarefas
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-pda">0 registros</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: Histórico -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card card-highlight" onclick="navigateTo('historico')">
+                            <div class="card-icon">
+                                <i data-feather="clock"></i>
+                            </div>
+                            <h3 class="card-title">Histórico</h3>
+                            <p class="card-description">
+                                Visualize todos os seus protocolos por data
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count" id="count-total">0 total</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 9: Novo Protocolo -->
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="protocol-card card-highlight card-primary" onclick="navigateTo('novo-protocolo')">
+                            <div class="card-icon">
+                                <i data-feather="plus-circle"></i>
+                            </div>
+                            <h3 class="card-title">Novo Protocolo</h3>
+                            <p class="card-description">
+                                Registre um novo protocolo ou ferramenta
+                            </p>
+                            <div class="card-footer-info">
+                                <span class="badge-count">Começar agora</span>
+                                <i data-feather="arrow-right" class="arrow-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="container-fluid">
+            <p class="text-center text-muted mb-0">
+                &copy; 2025 Aliança Divergente. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/client.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
