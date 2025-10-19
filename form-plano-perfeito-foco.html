@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano Perfeito - Definindo Foco - Aliança Divergente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="dashboard-page">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="novo-protocolo.html">
+                <i data-feather="arrow-left" class="feather-sm"></i>
+                <span class="brand-title">Plano Perfeito - Definindo Foco</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="navbar-text me-3" id="userGreeting">
+                            <i data-feather="user" class="feather-sm"></i>
+                            <span id="userName">Carregando...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-gold btn-sm" onclick="logout()">
+                            <i data-feather="log-out" class="feather-sm"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                
+                <!-- Header -->
+                <div class="form-header mb-4">
+                    <div class="form-header-icon">
+                        <i data-feather="compass"></i>
+                    </div>
+                    <div class="form-header-content">
+                        <h1 class="form-title">Definindo Foco e Energia</h1>
+                        <p class="form-subtitle">Estabeleça seu Sonho Grande, distribua sua energia e defina objetivos claros</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container mb-4">
+                    <div class="progress-bar-custom">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">0% completo</p>
+                </div>
+
+                <!-- Alert Container -->
+                <div id="alertContainer"></div>
+
+                <!-- Formulário -->
+                <form id="focoForm" class="protocol-form">
+                    
+                    <!-- Informações Básicas -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <i data-feather="info" class="feather-sm"></i>
+                            <h3>Informações Básicas</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="nome" class="form-label">Nome (opcional)</label>
+                                    <input type="text" class="form-control" id="nome" placeholder="Seu nome">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="dataPreenchimento" class="form-label">Data *</label>
+                                    <input type="date" class="form-control" id="dataPreenchimento" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 1: Sonho Grande -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">1</span>
+                            <h3>Qual o seu Sonho Grande?</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="mb-3">
+                                <label for="sonhoGrande" class="form-label">Descreva seu Sonho Grande *</label>
+                                <textarea class="form-control form-textarea" id="sonhoGrande" rows="4" required 
+                                          oninput="updateProgress()"
+                                          placeholder="Qual é o seu grande objetivo? Seja específico e inspirador..."></textarea>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="comoSeraMedido" class="form-label">Como será medido *</label>
+                                    <input type="text" class="form-control" id="comoSeraMedido" required 
+                                           oninput="updateProgress()"
+                                           placeholder="Ex: Faturamento mensal">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="meta" class="form-label">Sua Meta *</label>
+                                    <input type="text" class="form-control" id="meta" required 
+                                           oninput="updateProgress()"
+                                           placeholder="Ex: R$ 50.000/mês">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="prazo" class="form-label">Prazo *</label>
+                                    <input type="text" class="form-control" id="prazo" required 
+                                           oninput="updateProgress()"
+                                           placeholder="Ex: Dezembro 2026">
+                                </div>
+                            </div>
+                            
+                            <div class="form-help">
+                                <i data-feather="target" class="feather-xs"></i>
+                                Seja específico: defina exatamente o que quer alcançar, como vai medir e quando pretende conquistar
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 2: Distribuição de Fichas nos Pilares -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">2</span>
+                            <h3>Distribua suas 5 Fichas de Energia</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <p class="mb-4">
+                                Você tem <strong>5 fichas</strong> para distribuir entre os pilares da sua vida. 
+                                Em qual(is) você precisa investir mais energia para alcançar seu Sonho Grande?
+                            </p>
+                            
+                            <div class="row g-4">
+                                <!-- Financeiro -->
+                                <div class="col-md-4">
+                                    <div class="pilar-card">
+                                        <div class="pilar-icon" style="background: rgba(40, 167, 69, 0.2);">
+                                            <i data-feather="dollar-sign"></i>
+                                        </div>
+                                        <h4 class="pilar-title">💰 Financeiro</h4>
+                                        <div class="fichas-selector">
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('financeiro', -1)">
+                                                <i data-feather="minus"></i>
+                                            </button>
+                                            <div class="fichas-display">
+                                                <span class="fichas-number" id="fichasFinanceiro">0</span>
+                                                <span class="fichas-label">fichas</span>
+                                            </div>
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('financeiro', 1)">
+                                                <i data-feather="plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Saúde -->
+                                <div class="col-md-4">
+                                    <div class="pilar-card">
+                                        <div class="pilar-icon" style="background: rgba(220, 53, 69, 0.2);">
+                                            <i data-feather="heart"></i>
+                                        </div>
+                                        <h4 class="pilar-title">❤️ Saúde</h4>
+                                        <div class="fichas-selector">
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('saude', -1)">
+                                                <i data-feather="minus"></i>
+                                            </button>
+                                            <div class="fichas-display">
+                                                <span class="fichas-number" id="fichasSaude">0</span>
+                                                <span class="fichas-label">fichas</span>
+                                            </div>
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('saude', 1)">
+                                                <i data-feather="plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Relacionamento -->
+                                <div class="col-md-4">
+                                    <div class="pilar-card">
+                                        <div class="pilar-icon" style="background: rgba(255, 193, 7, 0.2);">
+                                            <i data-feather="users"></i>
+                                        </div>
+                                        <h4 class="pilar-title">👥 Relacionamento</h4>
+                                        <div class="fichas-selector">
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('relacionamento', -1)">
+                                                <i data-feather="minus"></i>
+                                            </button>
+                                            <div class="fichas-display">
+                                                <span class="fichas-number" id="fichasRelacionamento">0</span>
+                                                <span class="fichas-label">fichas</span>
+                                            </div>
+                                            <button type="button" class="btn-ficha" onclick="adjustFichas('relacionamento', 1)">
+                                                <i data-feather="plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fichas-summary">
+                                <span>Fichas distribuídas:</span>
+                                <strong id="fichasTotal">0</strong>
+                                <span>de 5</span>
+                                <span id="fichasAlert" class="fichas-alert d-none">
+                                    <i data-feather="alert-circle" class="feather-xs"></i>
+                                    Você precisa distribuir exatamente 5 fichas!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 3: Objetivos (3-5 objetivos) -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">3</span>
+                            <h3>Defina seus Objetivos (3 a 5)</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <p class="mb-4">
+                                Liste de 3 a 5 objetivos concretos que vão te aproximar do seu Sonho Grande. 
+                                Associe cada um a um pilar.
+                            </p>
+                            
+                            <div id="objetivosContainer">
+                                <!-- Objetivos serão adicionados dinamicamente -->
+                            </div>
+                            
+                            <button type="button" class="btn btn-outline-primary mt-3" onclick="addObjetivo()" id="btnAddObjetivo">
+                                <i data-feather="plus" class="feather-sm"></i>
+                                Adicionar Objetivo
+                            </button>
+                            
+                            <div class="form-help mt-3">
+                                <i data-feather="target" class="feather-xs"></i>
+                                Objetivos devem ser específicos, mensuráveis e alinhados com seu Sonho Grande
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO 4: Progresso Mensal -->
+                    <div class="form-card mb-4">
+                        <div class="form-card-header">
+                            <span class="question-number">4</span>
+                            <h3>Medindo seu Progresso (Opcional)</h3>
+                        </div>
+                        <div class="form-card-body">
+                            <p class="mb-4">
+                                Você pode registrar seu progresso esperado para cada mês do ano. 
+                                Esta seção é opcional e pode ser preenchida posteriormente.
+                            </p>
+                            
+                            <div class="accordion" id="progressoAccordion">
+                                <!-- Janeiro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes1">
+                                            Janeiro
+                                        </button>
+                                    </h2>
+                                    <div id="mes1" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoJaneiro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Janeiro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Fevereiro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes2">
+                                            Fevereiro
+                                        </button>
+                                    </h2>
+                                    <div id="mes2" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoFevereiro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Fevereiro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Março -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes3">
+                                            Março
+                                        </button>
+                                    </h2>
+                                    <div id="mes3" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoMarco" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Março..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Abril -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes4">
+                                            Abril
+                                        </button>
+                                    </h2>
+                                    <div id="mes4" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoAbril" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Abril..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Maio -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes5">
+                                            Maio
+                                        </button>
+                                    </h2>
+                                    <div id="mes5" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoMaio" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Maio..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Junho -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes6">
+                                            Junho
+                                        </button>
+                                    </h2>
+                                    <div id="mes6" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoJunho" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Junho..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Julho -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes7">
+                                            Julho
+                                        </button>
+                                    </h2>
+                                    <div id="mes7" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoJulho" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Julho..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Agosto -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes8">
+                                            Agosto
+                                        </button>
+                                    </h2>
+                                    <div id="mes8" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoAgosto" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Agosto..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Setembro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes9">
+                                            Setembro
+                                        </button>
+                                    </h2>
+                                    <div id="mes9" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoSetembro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Setembro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Outubro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes10">
+                                            Outubro
+                                        </button>
+                                    </h2>
+                                    <div id="mes10" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoOutubro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Outubro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Novembro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes11">
+                                            Novembro
+                                        </button>
+                                    </h2>
+                                    <div id="mes11" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoNovembro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Novembro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Dezembro -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mes12">
+                                            Dezembro
+                                        </button>
+                                    </h2>
+                                    <div id="mes12" class="accordion-collapse collapse" data-bs-parent="#progressoAccordion">
+                                        <div class="accordion-body">
+                                            <textarea class="form-control" id="progressoDezembro" rows="2" 
+                                                      placeholder="Descreva onde você espera estar em Dezembro..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary btn-lg" onclick="window.history.back()">
+                            <i data-feather="x" class="feather-sm"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <span class="btn-text">
+                                <i data-feather="save" class="feather-sm"></i>
+                                Salvar Plano
+                            </span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Plano Salvo com Sucesso! 🎯</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Seu Plano Perfeito foi registrado com sucesso!</p>
+                    <p>Deseja criar um PDA (Percepção, Decisão, Ação) para começar a executar?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" onclick="finishWithoutPDA()">
+                        Não, obrigado
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="createPDA()">
+                        <i data-feather="check-circle" class="feather-sm"></i>
+                        Sim, criar PDA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/client.js"></script>
+    <script src="assets/js/form-plano-perfeito-foco.js"></script>
+    
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
