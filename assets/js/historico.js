@@ -50,7 +50,7 @@
     // CARREGAR HISTÓRICO
     // ========================================
     
-    window.loadHistory = async function() {
+        window.loadHistory = async function() {
         try {
             const timeline = document.getElementById('timeline');
             timeline.innerHTML = `
@@ -60,12 +60,10 @@
                 </div>
             `;
             
-            // Obter filtros
             const filterType = document.getElementById('filterType').value;
-            const filterDateStart = document.getElementById('filterDateStart').value;
-            const filterDateEnd = document.getElementById('filterDateEnd').value;
+            const searchText = document.getElementById('searchText').value.toLowerCase();
+            const sortBy = document.getElementById('sortBy').value;
             
-            // Buscar todos os protocolos
             allProtocols = [];
             
             // 1. PDAs
@@ -163,6 +161,44 @@
                 });
             }
             
+            // 6. Combate ao Medo
+            const { data: medos } = await supabase
+                .from('ad_protocolo_combate_medo')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('data_preenchimento', { ascending: false });
+            
+            if (medos) {
+                medos.forEach(item => {
+                    allProtocols.push({
+                        ...item,
+                        type: 'combate_medo',
+                        typeName: 'Combate ao Medo',
+                        date: item.data_preenchimento,
+                        title: item.medo_descricao ? 'Medo: ' + item.medo_descricao.substring(0, 50) + '...' : 'Combate ao Medo'
+                    });
+                });
+            }
+            
+            // 7. Culpa Real
+            const { data: culpas } = await supabase
+                .from('ad_protocolo_culpa_real')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('data_preenchimento', { ascending: false });
+            
+            if (culpas) {
+                culpas.forEach(item => {
+                    allProtocols.push({
+                        ...item,
+                        type: 'culpa_real',
+                        typeName: 'Eliminando Culpa Real',
+                        date: item.data_preenchimento,
+                        title: item.nome_pessoa ? 'Conversa com ' + item.nome_pessoa : 'Eliminando Culpa'
+                    });
+                });
+            }
+            
             // Aplicar filtros
             let filteredProtocols = [...allProtocols];
             
@@ -178,13 +214,9 @@
                 filteredProtocols = filteredProtocols.filter(p => p.date <= filterDateEnd);
             }
             
-            // Ordenar por data (mais recente primeiro)
             filteredProtocols.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            // Atualizar estatísticas
             updateStats(allProtocols);
-            
-            // Renderizar timeline
             renderTimeline(filteredProtocols);
             
         } catch (error) {
