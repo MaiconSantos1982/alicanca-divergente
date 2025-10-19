@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Aliança Divergente</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="dashboard-page">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="dashboard.html">
+                <i data-feather="arrow-left" class="feather-sm"></i>
+                <span class="brand-title">Histórico de Protocolos</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="navbar-text me-3" id="userGreeting">
+                            <i data-feather="user" class="feather-sm"></i>
+                            <span id="userName">Carregando...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-gold btn-sm" onclick="logout()">
+                            <i data-feather="log-out" class="feather-sm"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                
+                <!-- Header -->
+                <div class="mb-4">
+                    <h1 class="page-title mb-2">Histórico Completo</h1>
+                    <p class="page-subtitle mb-0">Visualize todos os seus protocolos e PDAs</p>
+                </div>
+
+                <!-- Filtros -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Tipo de Protocolo</label>
+                                <select class="form-select" id="filterType" onchange="loadHistory()">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="pda">PDA</option>
+                                    <option value="plano_perfeito_licoes">Plano Perfeito - Lições</option>
+                                    <option value="plano_perfeito_foco">Plano Perfeito - Foco</option>
+                                    <option value="nucleo_interno">Núcleo Emocional Interno</option>
+                                    <option value="nucleo_externo">Núcleo Emocional Externo</option>
+                                    <option value="combate_medo">Combate ao Medo</option>
+                                    <option value="culpa_real">Eliminando Culpa Real</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <label class="form-label">De</label>
+                                <input type="date" class="form-control" id="filterDateStart" onchange="loadHistory()">
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <label class="form-label">Até</label>
+                                <input type="date" class="form-control" id="filterDateEnd" onchange="loadHistory()">
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <button class="btn btn-secondary w-100" onclick="clearFilters()">
+                                    <i data-feather="x" class="feather-sm"></i>
+                                    Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-feather="file-text"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-number" id="totalCount">0</h3>
+                                <p class="stat-label">Total de Registros</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-feather="check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-number" id="thisMonthCount">0</h3>
+                                <p class="stat-label">Este Mês</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-feather="calendar"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-number" id="thisWeekCount">0</h3>
+                                <p class="stat-label">Esta Semana</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-feather="layers"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-number" id="typesCount">0</h3>
+                                <p class="stat-label">Tipos Diferentes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div id="timeline">
+                    <!-- Será preenchido via JavaScript -->
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-gold" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Carregando histórico...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalTitle">Detalhes do Protocolo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Será preenchido dinamicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/client.js"></script>
+    <script src="assets/js/historico.js"></script>
+    
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
