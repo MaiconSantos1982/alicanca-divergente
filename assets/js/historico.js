@@ -461,6 +461,16 @@ if (protecao) {
                         .single();
                     html = renderCulpaDetails(culpa);
                     break;
+
+            case 'protecao_emocional':
+                const { data: prot } = await supabase
+                .from('ad_protocolo_protecao_emocional')
+                .select('*')
+                .eq('id', id)
+                .single();
+            html = renderProtecaoDetails(prot);
+            break;
+
             }
             
             modalBody.innerHTML = html;
@@ -664,6 +674,36 @@ if (protecao) {
             </div>
         `;
     }
+
+    function renderProtecaoDetails(prot) {
+    return `
+        <div class="details-container">
+            <div class="detail-item">
+                <strong>Envolvido:</strong>
+                <p>${escapeHtml(prot.envolvido || '-')}</p>
+            </div>
+            <div class="detail-item">
+                <strong>Padrão(s) controlador(es):</strong>
+                <ul>
+                    ${prot.padrao_vitima_natural ? '<li>Vítima Natural</li>' : ''}
+                    ${prot.padrao_vitima_intencional ? '<li>Vítima Intencional</li>' : ''}
+                    ${prot.padrao_vingador ? '<li>Vingador</li>' : ''}
+                    ${prot.padrao_narcisista ? '<li>Narcisista</li>' : ''}
+                </ul>
+            </div>
+            <div class="detail-item">
+                <strong>Custo/Dano:</strong>
+                <p>${escapeHtml(prot.custo_dano_interferencia || '-')}</p>
+            </div>
+            <div class="detail-item">
+                <strong>Vai fazer diferente:</strong>
+                <p>${escapeHtml(prot.fazer_diferente || '-')}</p>
+            </div>
+            <!-- Adicione mais campos importantes se quiser -->
+        </div>
+    `;
+}
+
     
     // ========================================
     // LIMPAR FILTROS
@@ -693,7 +733,8 @@ if (protecao) {
             'nucleo_interno': 'user-check',
             'nucleo_externo': 'users',
             'combate_medo': 'shield',
-            'culpa_real': 'heart'
+            'culpa_real': 'heart',
+            'protecao_emocional': 'shield'
         };
         return icons[type] || 'file-text';
     }
@@ -706,7 +747,8 @@ if (protecao) {
             'nucleo_interno': '#6f42c1',
             'nucleo_externo': '#e83e8c',
             'combate_medo': '#fd7e14',
-            'culpa_real': '#dc3545'
+            'culpa_real': '#dc3545',
+            'protecao_emocional': '#12B5B0'
         };
         return colors[type] || '#D8AE61';
     }
