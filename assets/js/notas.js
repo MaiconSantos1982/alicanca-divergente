@@ -6,11 +6,12 @@
     'use strict';
     
     let currentUser = null;
+    let editingNoteId = null;
     
     document.addEventListener('DOMContentLoaded', async () => {
         await checkAuth();
-        setupForm();
         await loadNotas();
+        await updateStats();
     });
     
     async function checkAuth() {
@@ -37,14 +38,21 @@
         }
     }
     
-    function setupForm() {
+    window.openNewNoteModal = function() {
+        editingNoteId = null;
+        
+        // Limpar formulário
+        document.getElementById('notasForm').reset();
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('dataEvento').value = today;
         
-        document.getElementById('notasForm').addEventListener('submit', handleSubmit);
+        // Abrir modal
+        const modal = new bootstrap.Modal(document.getElementById('newNoteModal'));
+        modal.show();
         
-        console.log('✅ Formulário configurado');
-    }
+        // Atualizar ícones
+        setTimeout(() => feather.replace(), 100);
+    };
     
     window.updateLabels = function() {
         const tipo = document.getElementById('tipo').value;
@@ -74,16 +82,12 @@
         }
     };
     
-    async function handleSubmit(e) {
-        e.preventDefault();
-        
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = submitBtn.querySelector('.btn-text');
-        const spinner = submitBtn.querySelector('.spinner-border');
-        
-        submitBtn.disabled = true;
-        btnText.classList.add('d-none');
-        spinner.classList.remove('d-none');
+    window.handleSubmit = async function() {
+        const form = document.getElementById('notasForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
         
         try {
             const formData = {
@@ -94,52 +98,108 @@
                 conteudo: document.getElementById('conteudo').value.trim()
             };
             
-            const { data, error } = await supabase
-                .from('ad_notas')
-                .insert([formData])
-                .select();
+            if (editingNoteId) {
+                // Atualizar nota existente
+                const { error } = await supabase
+                    .from('ad_notas')
+                    .update(formData)
+                    .eq('id', editingNoteId);
+                
+                if (error) throw error;
+                showAlert('Nota atualizada com sucesso!', 'success');
+            } else {
+                // Criar nova nota
+                const { error } = await supabase
+                    .from('ad_notas')
+                    .insert([formData]);
+                
+                if (error) throw error;
+                showAlert('Nota salva com sucesso!', 'success');
+            }
             
-            if (error) throw error;
-            
-            showAlert('Nota salva com sucesso!', 'success');
-            
-            // Limpar form
-            document.getElementById('notasForm').reset();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dataEvento').value = today;
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('newNoteModal'));
+            modal.hide();
             
             // Recarregar notas
             await loadNotas();
+            await updateStats();
             
         } catch (error) {
             console.error('Erro ao salvar:', error);
             showAlert('Erro ao salvar nota: ' + (error.message || 'Tente novamente'), 'danger');
-        } finally {
-            submitBtn.disabled = false;
-            btnText.classList.remove('d-none');
-            spinner.classList.add('d-none');
+        }
+    };
+    
+    async function updateStats() {
+        try {
+            const { data: notas, error } = await supabase
+                .from('ad_notas')
+                .select('tipo')
+                .eq('user_id', currentUser.id);
+            
+            if (error) throw error;
+            
+            const total = notas?.length || 0;
+            const audios = notas?.filter(n => n.tipo === 'audio_diario').length || 0;
+            const impulso = notas?.filter(n => n.tipo === 'impulso').length || 0;
+            const reforco = notas?.filter(n => n.tipo === 'reforco').length || 0;
+            
+            document.getElementById('totalNotas').textContent = total;
+            document.getElementById('countAudios').textContent = audios;
+            document.getElementById('countImpulso').textContent = impulso;
+            document.getElementById('countReforco').textContent = reforco;
+            
+        } catch (error) {
+            console.error('Erro ao atualizar estatísticas:', error);
         }
     }
     
     async function loadNotas() {
         try {
-            const container = document.getElementById('notasRecentes');
+            const container = document.getElementById('notasContainer');
             
-            const { data: notas, error } = await supabase
+            // Obter filtros
+            const filterTipo = document.getElementById('filterTipo')?.value || '';
+            const filterDateStart = document.getElementById('filterDateStart')?.value || '';
+            const filterDateEnd = document.getElementById('filterDateEnd')?.value || '';
+            
+            // Construir query
+            let query = supabase
                 .from('ad_notas')
                 .select('*')
                 .eq('user_id', currentUser.id)
-                .order('data_evento', { ascending: false })
-                .limit(10);
+                .order('data_evento', { ascending: false });
+            
+            if (filterTipo) {
+                query = query.eq('tipo', filterTipo);
+            }
+            
+            if (filterDateStart) {
+                query = query.gte('data_evento', filterDateStart);
+            }
+            
+            if (filterDateEnd) {
+                query = query.lte('data_evento', filterDateEnd);
+            }
+            
+            const { data: notas, error } = await query;
             
             if (error) throw error;
             
             if (!notas || notas.length === 0) {
-                container.innerHTML = '<p class="text-muted text-center">Nenhuma nota registrada ainda.</p>';
+                container.innerHTML = `
+                    <div class="empty-state py-5">
+                        <i data-feather="inbox" style="width: 48px; height: 48px; color: var(--accent-gold);"></i>
+                        <h4 class="mt-3">Nenhuma nota registrada</h4>
+                        <p class="text-muted">Clique em "Nova Nota" para começar</p>
+                    </div>
+                `;
+                feather.replace();
                 return;
             }
             
-            let html = '<div class="list-group">';
+            let html = '<div class="notes-list">';
             
             notas.forEach(nota => {
                 const tipoLabel = getTipoLabel(nota.tipo);
@@ -147,24 +207,41 @@
                 const dataFormatted = formatDate(nota.data_evento);
                 
                 html += `
-                    <div class="list-group-item list-group-item-action" onclick="viewNota('${nota.id}')">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="note-item">
+                        <div class="note-header">
                             <div>
                                 <span class="badge" style="background: ${tipoColor};">${tipoLabel}</span>
                                 <small class="text-muted ms-2">${dataFormatted}</small>
                             </div>
+                            <div class="note-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewNota('${nota.id}')" title="Visualizar">
+                                    <i data-feather="eye" class="feather-xs"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="editNota('${nota.id}')" title="Editar">
+                                    <i data-feather="edit-2" class="feather-xs"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteNota('${nota.id}')" title="Excluir">
+                                    <i data-feather="trash-2" class="feather-xs"></i>
+                                </button>
+                            </div>
                         </div>
-                        <h6 class="mb-1">${escapeHtml(nota.titulo)}</h6>
-                        <p class="mb-0 text-muted small">${truncateText(escapeHtml(nota.conteudo), 100)}</p>
+                        <h5 class="note-title">${escapeHtml(nota.titulo)}</h5>
+                        <p class="note-excerpt">${truncateText(escapeHtml(nota.conteudo), 150)}</p>
                     </div>
                 `;
             });
             
             html += '</div>';
             container.innerHTML = html;
+            feather.replace();
             
         } catch (error) {
             console.error('Erro ao carregar notas:', error);
+            document.getElementById('notasContainer').innerHTML = `
+                <div class="alert alert-danger">
+                    Erro ao carregar notas. Recarregue a página.
+                </div>
+            `;
         }
     }
     
@@ -190,8 +267,8 @@
                         <small class="text-muted ms-2">${dataFormatted}</small>
                     </div>
                     <h4 class="mb-3">${escapeHtml(nota.titulo)}</h4>
-                    <div class="nota-content">
-                        ${escapeHtml(nota.conteudo).replace(/\n/g, '<br>')}
+                    <div class="nota-content" style="white-space: pre-wrap; line-height: 1.8;">
+                        ${escapeHtml(nota.conteudo)}
                     </div>
                 </div>
             `;
@@ -202,6 +279,73 @@
         } catch (error) {
             console.error('Erro ao carregar nota:', error);
         }
+    };
+    
+    window.editNota = async function(id) {
+        try {
+            const { data: nota, error } = await supabase
+                .from('ad_notas')
+                .select('*')
+                .eq('id', id)
+                .single();
+            
+            if (error) throw error;
+            
+            editingNoteId = id;
+            
+            // Preencher formulário
+            document.getElementById('tipo').value = nota.tipo;
+            document.getElementById('dataEvento').value = nota.data_evento;
+            document.getElementById('titulo').value = nota.titulo;
+            document.getElementById('conteudo').value = nota.conteudo;
+            
+            updateLabels();
+            
+            // Abrir modal
+            const modal = new bootstrap.Modal(document.getElementById('newNoteModal'));
+            modal.show();
+            
+            setTimeout(() => feather.replace(), 100);
+            
+        } catch (error) {
+            console.error('Erro ao carregar nota para edição:', error);
+            showAlert('Erro ao carregar nota', 'danger');
+        }
+    };
+    
+    window.deleteNota = async function(id) {
+        if (!confirm('Deseja realmente excluir esta nota? Esta ação não pode ser desfeita.')) {
+            return;
+        }
+        
+        try {
+            const { error } = await supabase
+                .from('ad_notas')
+                .delete()
+                .eq('id', id);
+            
+            if (error) throw error;
+            
+            showAlert('Nota excluída com sucesso!', 'success');
+            await loadNotas();
+            await updateStats();
+            
+        } catch (error) {
+            console.error('Erro ao excluir nota:', error);
+            showAlert('Erro ao excluir nota: ' + (error.message || 'Tente novamente'), 'danger');
+        }
+    };
+    
+    window.clearFilters = function() {
+        const filterTipo = document.getElementById('filterTipo');
+        const filterDateStart = document.getElementById('filterDateStart');
+        const filterDateEnd = document.getElementById('filterDateEnd');
+        
+        if (filterTipo) filterTipo.value = '';
+        if (filterDateStart) filterDateStart.value = '';
+        if (filterDateEnd) filterDateEnd.value = '';
+        
+        loadNotas();
     };
     
     function getTipoLabel(tipo) {
@@ -245,24 +389,27 @@
     }
     
     function showAlert(message, type = 'info') {
-        const container = document.getElementById('alertContainer');
-        const alertId = 'alert-' + Date.now();
-        
-        const alert = `
-            <div class="alert alert-${type} alert-dismissible fade show" role="alert" id="${alertId}">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification toast-' + type;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: ${type === 'success' ? '#28a745' : type === 'danger' ? '#dc3545' : '#17a2b8'};
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
         `;
-        
-        container.innerHTML = alert;
+        document.body.appendChild(toast);
         
         setTimeout(() => {
-            const alertElement = document.getElementById(alertId);
-            if (alertElement) alertElement.remove();
-        }, 5000);
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
     
     window.logout = async function() {
@@ -277,6 +424,9 @@
             }
         }
     };
+    
+    // Expor loadNotas globalmente para os filtros
+    window.loadNotas = loadNotas;
     
     console.log('✅ Notas.js inicializado');
     
