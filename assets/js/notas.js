@@ -202,34 +202,39 @@
             let html = '<div class="notes-list">';
             
             notas.forEach(nota => {
-                const tipoLabel = getTipoLabel(nota.tipo);
-                const tipoColor = getTipoColor(nota.tipo);
-                const dataFormatted = formatDate(nota.data_evento);
-                
-                html += `
-                    <div class="note-item">
-                        <div class="note-header">
-                            <div>
-                                <span class="badge" style="background: ${tipoColor};">${tipoLabel}</span>
-                                <small class="text-muted ms-2">${dataFormatted}</small>
-                            </div>
-                            <div class="note-actions">
-                                <button class="btn btn-sm btn-outline-primary" onclick="viewNota('${nota.id}')" title="Visualizar">
-                                    <i data-feather="eye" class="feather-xs"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning" onclick="editNota('${nota.id}')" title="Editar">
-                                    <i data-feather="edit-2" class="feather-xs"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteNota('${nota.id}')" title="Excluir">
-                                    <i data-feather="trash-2" class="feather-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <h5 class="note-title">${escapeHtml(nota.titulo)}</h5>
-                        <p class="note-excerpt">${truncateText(escapeHtml(nota.conteudo), 150)}</p>
-                    </div>
-                `;
-            });
+    const tipoLabel = getTipoLabel(nota.tipo);
+    const tipoColor = getTipoColor(nota.tipo);
+    const dataFormatted = formatDate(nota.data_evento);
+    
+    html += `
+        <div class="note-item">
+            <!-- Linha 1: Tag e Título -->
+            <div class="note-line-1">
+                <div class="note-type-title">
+                    <span class="badge" style="background: ${tipoColor};">${tipoLabel}</span>
+                    <h5 class="note-title">${escapeHtml(nota.titulo)}</h5>
+                </div>
+                <small class="text-muted">${dataFormatted}</small>
+            </div>
+            
+            <!-- Linha 2: Descrição e Botões -->
+            <div class="note-line-2">
+                <p class="note-excerpt">${truncateText(escapeHtml(nota.conteudo), 150)}</p>
+                <div class="note-actions">
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewNota('${nota.id}')" title="Visualizar">
+                        <i data-feather="eye" class="feather-xs"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="editNota('${nota.id}')" title="Editar">
+                        <i data-feather="edit-2" class="feather-xs"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteNota('${nota.id}')" title="Excluir">
+                        <i data-feather="trash-2" class="feather-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+});
             
             html += '</div>';
             container.innerHTML = html;
