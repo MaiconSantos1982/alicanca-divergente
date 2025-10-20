@@ -177,7 +177,7 @@
         'culpa-real': 'form-culpa-real.html',
         'pda': 'pda.html',
         'historico': 'historico.html',
-        'novo-protocolo': 'novo-protocolo.html'
+        'novo-protocolo': 'novo-protocolo.html',
         'notas': 'notas.html'
     };
     
