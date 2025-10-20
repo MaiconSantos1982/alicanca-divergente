@@ -20,38 +20,61 @@
     // ========================================
     
     async function checkAuthAndLoad() {
-        try {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            
-            if (error) throw error;
-            
-            if (!session) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            currentUser = session.user;
-            
-            // Carregar nome do usuário
-            const userName = currentUser.user_metadata?.full_name || 
-                           currentUser.user_metadata?.display_name || 
-                           currentUser.email.split('@')[0];
-            
-            document.getElementById('userName').textContent = userName;
-            
-            // Definir data padrão como hoje
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('pdaDataAcao').value = today;
-            
-            // Carregar PDAs
-            await loadPDAs();
-            
-        } catch (error) {
-            console.error('Erro ao verificar autenticação:', error);
+    try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
+        if (!session) {
             window.location.href = 'index.html';
+            return;
         }
+        
+        currentUser = session.user;
+        
+        const userName = currentUser.user_metadata?.full_name || 
+                       currentUser.user_metadata?.display_name || 
+                       currentUser.email.split('@')[0];
+        
+        document.getElementById('userName').textContent = userName;
+        
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('pdaDataAcao').value = today;
+        
+        await loadPDAs();
+        
+        setupStatusListener();  // ← ADICIONE ESTA LINHA
+        
+    } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        window.location.href = 'index.html';
     }
+}
+
+    // ========================================
+// LISTENER PARA STATUS "CONCLUÍDO"
+// ========================================
+
+function setupStatusListener() {
+    // Adicionar listener ao select de status no modal
+    const statusSelect = document.getElementById('pdaStatus');
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            if (this.value === 'Concluído') {
+                showCelebrationModal();
+            }
+        });
+    }
+}
+
+function showCelebrationModal() {
+    const modal = new bootstrap.Modal(document.getElementById('celebracaoModal'));
+    modal.show();
     
+    // Atualizar ícones após abrir o modal
+    setTimeout(() => feather.replace(), 100);
+}
+
     // ========================================
     // CARREGAR PDAs
     // ========================================
