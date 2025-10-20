@@ -163,8 +163,8 @@
                     <select class="form-select objetivo-pilar" required>
                         <option value="">Selecione...</option>
                         <option value="Financeiro">💰 Financeiro</option>
-                        <option value="Saúde">❤️ Saúde</option>
-                        <option value="Relacionamento">👥 Relacionamento</option>
+                        <option value="Saúde">🩺 Saúde</option>
+                        <option value="Relacionamento">❤️ Relacionamento</option>
                     </select>
                 </div>
             </div>
