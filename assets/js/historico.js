@@ -224,7 +224,7 @@ if (protecao) {
             ...item,
             type: 'protecao_emocional',
             typeName: 'Proteção Emocional',
-            date: item.data_preenchimento,
+            date: item.data_preenchimento || '1970-01-01',
             title: 'Protocolo de Proteção: ' + (item.envolvido || '[sem nome]')
         });
     });
