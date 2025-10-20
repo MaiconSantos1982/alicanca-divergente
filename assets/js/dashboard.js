@@ -178,7 +178,9 @@
         'pda': 'pda.html',
         'historico': 'historico.html',
         'novo-protocolo': 'novo-protocolo.html',
-        'notas': 'notas.html'
+        'notas': 'notas.html',
+        'protecao-emocional': 'form-protecao-emocional.html'
+
     };
     
     const url = pageMap[page];
