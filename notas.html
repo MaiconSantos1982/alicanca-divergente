@@ -44,97 +44,119 @@
     <!-- Main Content -->
     <div class="container-fluid py-4">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-8">
+            <div class="col-12 col-xl-10">
                 
-                <!-- Header -->
-                <div class="form-header mb-4">
-                    <div class="form-header-icon">
-                        <i data-feather="edit-3"></i>
+                <!-- Header com Botão Nova Nota -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-header">
+                        <div class="form-header-icon">
+                            <i data-feather="edit-3"></i>
+                        </div>
+                        <div class="form-header-content">
+                            <h1 class="form-title mb-0">Notas e Percepções</h1>
+                            <p class="form-subtitle mb-0">Registre suas percepções sobre áudios e encontros</p>
+                        </div>
                     </div>
-                    <div class="form-header-content">
-                        <h1 class="form-title">Notas e Percepções</h1>
-                        <p class="form-subtitle">Registre suas percepções sobre áudios e encontros</p>
+                    <button class="btn btn-primary btn-lg" onclick="openNewNoteModal()">
+                        <i data-feather="plus" class="feather-sm"></i>
+                        Nova Nota
+                    </button>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-feather="file-text"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number" id="totalNotas">0</h3>
+                                <p class="stat-label">Total de Notas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(23, 162, 184, 0.1); color: #17a2b8;">
+                                <i data-feather="mic"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number" id="countAudios">0</h3>
+                                <p class="stat-label">Áudios</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+                                <i data-feather="zap"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number" id="countImpulso">0</h3>
+                                <p class="stat-label">Impulso</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">
+                                <i data-feather="repeat"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number" id="countReforco">0</h3>
+                                <p class="stat-label">Reforço</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Alert Container -->
-                <div id="alertContainer"></div>
-
-                <!-- Formulário -->
-                <form id="notasForm" class="protocol-form">
-                    
-                    <div class="form-card mb-4">
-                        <div class="form-card-header">
-                            <i data-feather="info" class="feather-sm"></i>
-                            <h3>Nova Nota</h3>
-                        </div>
-                        <div class="form-card-body">
-                            
-                            <!-- Tipo -->
-                            <div class="mb-4">
-                                <label for="tipo" class="form-label">Tipo *</label>
-                                <select class="form-select" id="tipo" required onchange="updateLabels()">
-                                    <option value="">Selecione...</option>
+                <!-- Filtros -->
+                <div class="form-card mb-4">
+                    <div class="form-card-header">
+                        <i data-feather="filter" class="feather-sm"></i>
+                        <h3>Filtros</h3>
+                    </div>
+                    <div class="form-card-body">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" id="filterTipo" onchange="loadNotas()">
+                                    <option value="">Todos os tipos</option>
                                     <option value="audio_diario">Áudio Diário</option>
                                     <option value="impulso">Encontro de Impulso</option>
                                     <option value="reforco">Encontro de Reforço</option>
                                 </select>
                             </div>
-
-                            <!-- Data -->
-                            <div class="mb-4">
-                                <label for="dataEvento" class="form-label" id="labelData">Data *</label>
-                                <input type="date" class="form-control" id="dataEvento" required>
+                            <div class="col-12 col-md-3">
+                                <label class="form-label">De</label>
+                                <input type="date" class="form-control" id="filterDateStart" onchange="loadNotas()">
                             </div>
-
-                            <!-- Título -->
-                            <div class="mb-4">
-                                <label for="titulo" class="form-label">Título *</label>
-                                <input type="text" class="form-control" id="titulo" required 
-                                       placeholder="Ex: Reflexão sobre o PDA">
+                            <div class="col-12 col-md-3">
+                                <label class="form-label">Até</label>
+                                <input type="date" class="form-control" id="filterDateEnd" onchange="loadNotas()">
                             </div>
-
-                            <!-- Conteúdo -->
-                            <div class="mb-0">
-                                <label for="conteudo" class="form-label">Percepções *</label>
-                                <textarea class="form-control form-textarea" id="conteudo" rows="8" required
-                                          placeholder="Anote aqui seu resumo ou percepções..."></textarea>
-                                <div class="form-help mt-2">
-                                    <i data-feather="info" class="feather-xs"></i>
-                                    <span id="placeholderText">Anote aqui seu resumo ou percepções</span>
-                                </div>
+                            <div class="col-12 col-md-2 d-flex align-items-end">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                    <i data-feather="x" class="feather-sm"></i>
+                                    Limpar
+                                </button>
                             </div>
-
                         </div>
                     </div>
+                </div>
 
-                    <!-- Botões -->
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary btn-lg" onclick="window.history.back()">
-                            <i data-feather="x" class="feather-sm"></i>
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                            <span class="btn-text">
-                                <i data-feather="save" class="feather-sm"></i>
-                                Salvar Nota
-                            </span>
-                            <span class="spinner-border spinner-border-sm d-none"></span>
-                        </button>
-                    </div>
-
-                </form>
-
-                <!-- Notas Recentes -->
-                <div class="form-card mt-5">
+                <!-- Lista de Notas -->
+                <div class="form-card">
                     <div class="form-card-header">
                         <i data-feather="list" class="feather-sm"></i>
-                        <h3>Notas Recentes</h3>
+                        <h3>Minhas Notas</h3>
                     </div>
                     <div class="form-card-body">
-                        <div id="notasRecentes">
-                            <div class="text-center py-4">
+                        <div id="notasContainer">
+                            <div class="text-center py-5">
                                 <div class="spinner-border text-gold"></div>
+                                <p class="mt-3 text-muted">Carregando notas...</p>
                             </div>
                         </div>
                     </div>
@@ -144,15 +166,80 @@
         </div>
     </div>
 
-    <!-- Modal de Visualização -->
-    <div class="modal fade" id="viewModal" tabindex="-1">
+    <!-- Modal Nova Nota -->
+    <div class="modal fade" id="newNoteModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        <i data-feather="edit-3" class="feather-sm"></i>
+                        Nova Nota
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="notasForm">
+                        
+                        <!-- Tipo -->
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo *</label>
+                            <select class="form-select" id="tipo" required onchange="updateLabels()">
+                                <option value="">Selecione...</option>
+                                <option value="audio_diario">Áudio Diário</option>
+                                <option value="impulso">Encontro de Impulso</option>
+                                <option value="reforco">Encontro de Reforço</option>
+                            </select>
+                        </div>
+
+                        <!-- Data -->
+                        <div class="mb-3">
+                            <label for="dataEvento" class="form-label" id="labelData">Data *</label>
+                            <input type="date" class="form-control" id="dataEvento" required>
+                        </div>
+
+                        <!-- Título -->
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título *</label>
+                            <input type="text" class="form-control" id="titulo" required 
+                                   placeholder="Ex: Reflexão sobre o PDA">
+                        </div>
+
+                        <!-- Conteúdo -->
+                        <div class="mb-0">
+                            <label for="conteudo" class="form-label">Percepções *</label>
+                            <textarea class="form-control" id="conteudo" rows="8" required
+                                      placeholder="Anote aqui seu resumo ou percepções..."></textarea>
+                            <div class="form-help mt-2">
+                                <i data-feather="info" class="feather-xs"></i>
+                                <span id="placeholderText">Anote aqui seu resumo ou percepções</span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="handleSubmit()">
+                        <i data-feather="save" class="feather-sm"></i>
+                        Salvar Nota
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Visualização -->
+    <div class="modal fade" id="viewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header border-0">
                     <h5 class="modal-title" id="viewModalTitle">Nota</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="viewModalBody"></div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
             </div>
         </div>
     </div>
