@@ -109,7 +109,17 @@
             if (!errorExterno) {
                 updateCounter('count-externo', countExterno);
             }
-            
+
+            // Contador: Notas
+            const { count: countNotas, error: errorNotas } = await supabase
+                .from('ad_notas')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', userId);
+
+            if (!errorNotas) {
+                updateCounter('count-notas', countNotas, 'notas');
+            }
+
             // Contador: Combate ao Medo (quando criar a tabela)
             // const { count: countMedo } = await supabase
             //     .from('ad_protocolo_combate_medo')
@@ -168,6 +178,7 @@
         'pda': 'pda.html',
         'historico': 'historico.html',
         'novo-protocolo': 'novo-protocolo.html'
+        'notas': 'notas.html'
     };
     
     const url = pageMap[page];
