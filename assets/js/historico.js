@@ -211,6 +211,24 @@
                     });
                 });
             }
+            // 9. Protocolo de Proteção Emocional
+const { data: protecao } = await supabase
+    .from('ad_protocolo_protecao_emocional')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('data_preenchimento', { ascending: false });
+
+if (protecao) {
+    protecao.forEach(item => {
+        allProtocols.push({
+            ...item,
+            type: 'protecao_emocional',
+            typeName: 'Proteção Emocional',
+            date: item.data_preenchimento,
+            title: 'Protocolo de Proteção: ' + (item.envolvido || '[sem nome]')
+        });
+    });
+}
             
             // Aplicar filtros
             let filteredProtocols = [...allProtocols];
