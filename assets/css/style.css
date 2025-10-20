@@ -2330,3 +2330,91 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
 }
+
+.pattern-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+    transition: border 0.3s;
+}
+.pattern-card .form-check-label {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.pattern-fields {
+    background: rgba(255,255,255,0.07);
+    border-radius: 7px;
+    padding: 0.9rem 1rem 0.4rem 1rem;
+}
+
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem; 
+  background: rgba(0,0,0,0.10);
+  border-left: 4px solid var(--accent-gold);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 7px;
+}
+.info-icon {
+  flex-shrink: 0;
+  font-size: 1.6rem;
+  color: var(--accent-gold);
+}
+.info-content p {
+  margin-bottom: 0;
+}
+
+.form-card .question-number {
+    background: var(--accent-gold);
+    color: #222;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 100px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+    vertical-align: middle;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.progress-bar-custom {
+    flex: 1;
+    height: 8px;
+    background: #2e3944;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+.progress-fill {
+    background: linear-gradient(90deg,#FFD700 0%, #E6B800 100%);
+    height: 100%;
+    border-radius: 4px;
+    transition: width .3s;
+}
+.progress-text {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.form-card label, .form-label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-card-header h3,
+.form-card .form-label {
+    font-size: 1.2em;
+}
