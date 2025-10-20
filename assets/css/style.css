@@ -2281,3 +2281,7 @@ body {
         opacity: 0;
     }
 }
+/* Forçar cor branca para a data nas notas */
+.note-line-1 .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
