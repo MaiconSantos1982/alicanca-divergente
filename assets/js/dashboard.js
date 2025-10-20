@@ -120,6 +120,15 @@
                 updateCounter('count-notas', countNotas, 'notas');
             }
 
+            const { count: countProtecao, error: errorProtecao } = await supabase
+    .from('ad_protocolo_protecao_emocional')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId);
+if (!errorProtecao) {
+    updateCounter('count-protecao-emocional', countProtecao, 'registros');
+}
+
+
             // Contador: Combate ao Medo (quando criar a tabela)
             // const { count: countMedo } = await supabase
             //     .from('ad_protocolo_combate_medo')
