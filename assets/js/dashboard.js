@@ -158,26 +158,25 @@
     // ========================================
     
     window.navigateTo = function(page) {
-        // Mapear nomes de páginas
-        const pageMap = {
-            'plano-perfeito-licoes': 'plano-perfeito-licoes.html',
-            'plano-perfeito-foco': 'plano-perfeito-foco.html',
-            'nucleo-interno': 'nucleo-interno.html',
-            'nucleo-externo': 'nucleo-externo.html',
-            'combate-medo': 'combate-medo.html',
-            'culpa-real': 'culpa-real.html',
-            'pda': 'pda.html',
-            'historico': 'historico.html',
-            'novo-protocolo': 'novo-protocolo.html'
-        };
-        
-        const url = pageMap[page];
-        if (url) {
-            window.location.href = url;
-        } else {
-            console.error('Página não encontrada:', page);
-        }
+    const pageMap = {
+        'plano-perfeito-licoes': 'form-plano-perfeito-licoes.html',
+        'plano-perfeito-foco': 'form-plano-perfeito-foco.html',
+        'nucleo-interno': 'form-nucleo-interno.html',
+        'nucleo-externo': 'form-nucleo-externo.html',
+        'combate-medo': 'form-combate-medo.html',
+        'culpa-real': 'form-culpa-real.html',
+        'pda': 'pda.html',
+        'historico': 'historico.html',
+        'novo-protocolo': 'novo-protocolo.html'
     };
+    
+    const url = pageMap[page];
+    if (url) {
+        window.location.href = url;
+    } else {
+        console.error('Página não encontrada:', page);
+    }
+};
     
     // ========================================
     // LOGOUT
