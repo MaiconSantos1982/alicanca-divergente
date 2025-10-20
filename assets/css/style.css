@@ -2285,3 +2285,48 @@ body {
 .note-line-1 .text-muted {
     color: rgba(255, 255, 255, 0.7) !important;
 }
+/* ========================================
+   MODAL DE CELEBRAÇÃO
+   ======================================== */
+
+.celebration-modal .modal-content {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(255, 193, 7, 0.1));
+    border: 2px solid var(--accent-gold);
+}
+
+.celebration-icon {
+    font-size: 5rem;
+    animation: bounce 1s infinite;
+}
+
+.celebration-title {
+    color: var(--accent-gold);
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.celebration-text {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.celebration-text-secondary {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.celebration-cta {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    background: rgba(216, 174, 97, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent-gold);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
