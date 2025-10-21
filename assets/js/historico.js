@@ -44,7 +44,6 @@
             const filterDateStart = document.getElementById('filterDateStart');
             const filterDateEnd = document.getElementById('filterDateEnd');
             
-            if (filterType) filterType.addEventListener('change', loadHistory);
             if (filterDateStart) filterDateStart.addEventListener('change', loadHistory);
             if (filterDateEnd) filterDateEnd.addEventListener('change', loadHistory);
             
@@ -211,6 +210,7 @@
                     });
                 });
             }
+            
             // 9. Protocolo de Proteção Emocional
 const { data: protecao } = await supabase
     .from('ad_protocolo_protecao_emocional')
