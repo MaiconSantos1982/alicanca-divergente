@@ -380,17 +380,16 @@ a:hover {
 
 /* Protocol Cards */
 .protocol-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 2rem;
-    cursor: pointer;
-    transition: var(--transition);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+  height: 100%;
+  min-height: 220px; /* ou o que preferir para visual ficar igual */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 12px;
+  background: var(--card-bg, #27363B);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
 }
 
 .protocol-card::before {
