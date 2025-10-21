@@ -2418,3 +2418,15 @@ body {
 .form-card .form-label {
     font-size: 1.2em;
 }
+.card,
+.card .card-body {
+    background: var(--bg-main, #232f34) !important;
+    border: 1px solid var(--border-color, #333) !important;
+}
+
+.form-select,
+.form-control {
+    background: var(--input-bg, #232f34) !important;
+    color: var(--text-primary, #fff) !important;
+    border-color: var(--border-color, #333) !important;
+}
